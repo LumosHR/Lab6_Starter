@@ -6,7 +6,7 @@ const recipes = [
   'https://introweb.tech/assets/json/ghostCookies.json',
   'https://introweb.tech/assets/json/birthdayCake.json',
   'https://introweb.tech/assets/json/chocolateChip.json',
-  'https://introweb.tech/assets/json/chocolateChip.json',
+  'https://introweb.tech/assets/json/ghostCookies.json',
   'https://introweb.tech/assets/json/birthdayCake.json'
 ];
 
@@ -29,7 +29,7 @@ async function init() {
   // Add the first three recipe cards to the page
   createRecipeCards();
   // Make the "Show more" button functional
-  // bindShowMore();
+  bindShowMore();
 }
 
 async function fetchRecipes() {
@@ -87,13 +87,23 @@ function bindShowMore() {
 
   // Part 2 Explore - TODO
   let buttonEle = document.querySelector('button');
+  let mainEle = document.querySelector('main');
   buttonEle.addEventListener('click', () => {
     if (buttonEle.textContent == 'Show more') {
       buttonEle.textContent = 'Show less';
-      let mainEle = document.querySelector('main');
-      let recipeCard;
       let moreRecipes = recipes.slice(3, 5);
-      console.log(moreRecipes);
+      for (let recipe of moreRecipes) {
+        let recipeCard = document.createElement('recipe-card');
+        recipeCard.data = recipeData[recipe];
+        mainEle.appendChild(recipeCard);
+      }
+    }
+    else {
+      buttonEle.textContent = 'Show more';
+      for (let i = 0; i< 2; i++) {
+        let removeEle = document.querySelector('main');
+        removeEle.removeChild(removeEle.childNodes[6]);
+      }
     }
   })
 }
