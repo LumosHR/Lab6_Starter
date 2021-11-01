@@ -5,7 +5,9 @@
 const recipes = [
   'https://introweb.tech/assets/json/ghostCookies.json',
   'https://introweb.tech/assets/json/birthdayCake.json',
-  'https://introweb.tech/assets/json/chocolateChip.json'
+  'https://introweb.tech/assets/json/chocolateChip.json',
+  'https://introweb.tech/assets/json/chocolateChip.json',
+  'https://introweb.tech/assets/json/birthdayCake.json'
 ];
 
 // Once all of the recipes that were specified above have been fetched, their
@@ -27,7 +29,7 @@ async function init() {
   // Add the first three recipe cards to the page
   createRecipeCards();
   // Make the "Show more" button functional
-  bindShowMore();
+  // bindShowMore();
 }
 
 async function fetchRecipes() {
@@ -43,6 +45,18 @@ async function fetchRecipes() {
     // in the recipes folder and fetch them from there. You'll need to add their paths to the recipes array.
 
     // Part 1 Expose - TODO
+    let oriRecipes = recipes.slice(0, 3);
+    for (let recipe of oriRecipes) {
+      fetch(recipe)
+        .then(response => response.json())
+        .then(data => {
+          recipeData[recipe] = data;
+          if (Object.keys(recipeData).length == oriRecipes.length) {
+            resolve(true);
+          }
+        })
+        .catch(error => reject(false));
+    }
   });
 }
 
@@ -54,6 +68,13 @@ function createRecipeCards() {
   // show any others you've added when the user clicks on the "Show more" button.
 
   // Part 1 Expose - TODO
+  let mainEle = document.querySelector('main');
+  let oriRecipes = recipes.slice(0, 3);
+  for (let recipe of oriRecipes) {
+    let recipeCard = document.createElement("recipe-card");
+    recipeCard.data = recipeData[recipe];
+    mainEle.appendChild(recipeCard);
+  }
 }
 
 function bindShowMore() {
@@ -65,4 +86,14 @@ function bindShowMore() {
   // in the recipeData object where you stored them/
 
   // Part 2 Explore - TODO
+  let buttonEle = document.querySelector('button');
+  buttonEle.addEventListener('click', () => {
+    if (buttonEle.textContent == 'Show more') {
+      buttonEle.textContent = 'Show less';
+      let mainEle = document.querySelector('main');
+      let recipeCard;
+      let moreRecipes = recipes.slice(3, 5);
+      console.log(moreRecipes);
+    }
+  })
 }

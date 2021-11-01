@@ -1,8 +1,9 @@
 class RecipeCard extends HTMLElement {
   constructor() {
     // Part 1 Expose - TODO
-
+    super();
     // You'll want to attach the shadow DOM here
+    let shadowRoot = this.attachShadow({mode: 'open'});
   }
 
   set data(data) {
@@ -100,6 +101,77 @@ class RecipeCard extends HTMLElement {
     // created in the constructor()
 
     // Part 1 Expose - TODO
+    let imgEle = document.createElement('img');
+    imgEle.setAttribute('src', searchForKey(data, 'thumbnailUrl'));
+    card.appendChild(imgEle);
+
+    let titleRef = document.createElement('a');
+    titleRef.setAttribute('href', searchForKey(data, 'url'));
+    titleRef.innerHTML = searchForKey(data, 'headline');
+    let titleCls = document.createElement('p');
+    titleCls.classList.add('title');
+    titleCls.appendChild(titleRef);
+    card.appendChild(titleCls);
+
+    let orgCls = document.createElement('p');
+    orgCls.classList.add('organization');
+    orgCls.innerHTML = getOrganization(data);
+    card.appendChild(orgCls);
+
+    let ratingCls = document.createElement('div');
+    let aggregateRating = parseFloat(searchForKey(data, 'ratingValue'));
+    if (aggregateRating) {
+      let spanRating = document.createElement('span');
+      spanRating.innerHTML = aggregateRating;
+      ratingCls.appendChild(spanRating);
+      let imgRating = document.createElement('img');
+      if (aggregateRating >= 4.5) {
+        imgRating.src = "assets/images/icons/5-star.svg";
+        imgRating.alt = "5 stars";
+      }
+      else if (aggregateRating >= 3.5) {
+        imgRating.src = "assets/images/icons/4-star.svg";
+        imgRating.alt = "4 stars";
+      }
+      else if (aggregateRating >= 2.5) {
+        imgRating.src = "assets/images/icons/3-star.svg";
+        imgRating.alt = "3 stars";
+      }
+      else if (aggregateRating >= 1.5) {
+        imgRating.src = "assets/images/icons/2-star.svg";
+        imgRating.alt = "2 stars";
+      }
+      else if (aggregateRating >= 0.5) {
+        imgRating.src = "assets/images/icons/1-star.svg";
+        imgRating.alt = "1 stars";
+      }
+      else {
+        imgRating.src = "assets/images/icons/0-star.svg";
+        imgRating.alt = "0 stars";
+      }
+      ratingCls.appendChild(imgRating);
+
+      let nbReview = document.createElement('span');
+      nbReview.innerHTML = searchForKey(data, 'ratingCount');
+      ratingCls.appendChild(nbReview);
+    }
+    else {
+      let spanRating = document.createElement('span');
+      spanRating.innerHTML = 'No Review';
+      ratingCls.appendChild(spanRating);
+    }
+
+    let timeEle = document.createElement('time');
+    timeEle.innerHTML = convertTime(searchForKey(data, 'totalTime'));
+    card.appendChild(timeEle);
+
+    let igdEle = document.createElement('p');
+    igdEle.classList.add('ingredients');
+    igdEle.innerHTML = createIngredientList(searchForKey(data, 'recipeIngredient'));
+    card.appendChild(igdEle);
+
+    this.shadowRoot.appendChild(styleElem);
+    this.shadowRoot.appendChild(card);
   }
 }
 
